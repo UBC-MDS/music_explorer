@@ -4,12 +4,22 @@ Authors: Dongxiao Li, Rong Li, Zihan Zhou
 
 ## Description of App
 
-TBD
 The full proposal can be found in [our proposal file](https://github.com/UBC-MDS/music_explorer/blob/main/docs/proposal.md).
+
+The `music_explorer` dashboard is designed for the purpose of helping music lovers and members of Spotify music platform to explore music trends, discover popular songs in their interested genres and filter musics with high quality. 
+
+The dashboard mainly contains:
+
+- a bar chart that shows the music popularity for each music genres and the genre with the highest popularity being highlighted
+
+- a scatter plot between different music features (can be selected using the dropdown button by users) and popularity.
+
+- a table that returns top 10 popular songs given the genres selected as well as the popularity range filtered. 
+
 
 ## App Sketch  
 
-TBD
+![](http...)
 
 ## Contribution
 
