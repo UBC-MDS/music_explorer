@@ -19,7 +19,7 @@ The dashboard mainly contains:
 
 ## App Sketch  
 
-![](https://github.com/UBC-MDS/music_explorer/blob/motivation/img/app.jpeg)
+![](https://github.com/UBC-MDS/music_explorer/blob/main/img/app.jpeg)
 
 ## Contribution
 
