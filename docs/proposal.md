@@ -1,6 +1,5 @@
 # Motivation and purpose
 
-Motivation and purpose
 Our role: Data Analyst Team at a consulting company
 
 Target Audience: Music Enthusiasts(especially Spotify members)
