@@ -18,8 +18,8 @@ We will be visualizing a dataset of more than 30000 Spotify music tracks. The re
 ### Research questions:
 
 - What are the top 5 trending genres?
-- correlation between music features(loudness, danceability) and popularity
-- song recommendation system given genres and popularity range
+- What is the correlation between music features(loudness, danceability) and popularity?
+- what is the song recommendation system given genres and popularity range?
 
 ### Scenario of usage:
 Lucy enjoys listening to music and she is particularly intruiged by how much music-streaming has developed over the years. She has her own favorite genres and is also open to explore more new genres. However, she is unsure about how her current likings of genres correlate with her likings of new genres which she hasn't explored before. As the music streaming platform advances, she observes that there are usually customized recommendations, therefore she is curious as to how the music streaming platforms may or may not accurately predict her likings. Moreover, as a young women with taste in genres that are typically considered not of the young generation, she is also curious about whether age is an effective predictor for genre likings of music lovers in general. 
