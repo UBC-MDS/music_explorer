@@ -11,9 +11,8 @@ index_col=0).rename(
     'duration_ms': 'duration(ms)', 'track_popularity':'popularity'}, inplace=False).dropna()
 
 genre = sorted(list(df["genre"].dropna().unique()))
-#subgenre = sorted(list(df["subgenre"].dropna().unique()))
 
-suggested_list=sorted(df["track_artist"].unique())
+suggested_list = df['track_artist'].explode().value_counts().reset_index(name="count")["index"].tolist()
 
 def plot_bar(genre,pop_range):
     plot_df = df[df.genre.isin(genre)]
@@ -42,14 +41,14 @@ def plot_2(artist, genre, pop_range):
     """manage text input and creating plot_2"""
     pop_min = pop_range[0]
     pop_max = pop_range[1]
-    filtered_df = df.query("track_artist == @artist and genre in @genre and popularity > @pop_min and popularity < @pop_max")
+    filtered_df = df.query("track_artist == @artist and genre in @genre and popularity > @pop_min and popularity < @pop_max").copy()
     # Show warning if the filtered dataframe doesn't exist
     warning=''
     if artist!="":
         if filtered_df.empty:
             warning = "Invalid artist name!"
     if filtered_df.empty:
-        filtered_df = df.query("genre in @genre and popularity > @pop_min and popularity < @pop_max")
+        filtered_df = df.query("genre in @genre and popularity > @pop_min and popularity < @pop_max").copy()
         artist_list = filtered_df.groupby("track_artist")["track_artist"].size().nlargest(5).reset_index(name="count")["track_artist"].tolist()
         filtered_df = filtered_df[filtered_df.track_artist.isin(artist_list)]
     filtered_df["year"]= filtered_df["track_album_release_date"].str[:4]
@@ -71,10 +70,10 @@ def plot_2(artist, genre, pop_range):
         tooltip=[
             alt.Tooltip("track_artist", title="Artist"), 
             alt.Tooltip("mean(popularity)",title="Average popularity")
-            ]))).properties(width=300, height=100)
-    .properties(width=400, height=300)
-    .configure_axisX(labelAngle=-45, labelFontSize=20, titleFontSize=20)
-    .configure_axisY(labelFontSize=20, titleFontSize=20))
+            ])))
+    .properties(width=400, height=250)
+    .configure_axisX(labelAngle=-45, labelFontSize=12, titleFontSize=18)
+    .configure_axisY(labelFontSize=16, titleFontSize=18))
 
     return warning, chart.to_html()
 
@@ -148,8 +147,8 @@ app.layout = dbc.Container([
    dbc.Row([
        dbc.Col([
            dbc.Card([
-               dbc.CardHeader(html.Label("plot 2"), style={'font-size':16}),
-               dbc.Input(id='artist_name', type='text', list='list-suggested-inputs', value='', placeholder="Enter artist name of your interest"),
+               dbc.CardHeader(html.Label("What are the most prolific artists' popularity overtime (within the selected range)? Or specify an artist of interest."), style={'font-size':16}),
+               dbc.Input(id='artist_name', type='text', list='list-suggested-inputs', value='', placeholder="Enter a specifc artist name"),
                html.Div(id="warning"),
                html.Datalist(id='list-suggested-inputs', children=[html.Option(value=name) for name in  suggested_list]),
                html.Iframe(id="plot_2",
