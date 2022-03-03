@@ -175,6 +175,19 @@ app.layout = dbc.Container([
 
 ])
 
+
+
+# Receive input from user and create plot
+@app.callback(
+    Output('plot_bar', 'srcDoc'),
+    #Output('plot_3','srcDoc'),
+    Input('genre_checklist', 'value'),
+    Input('pop_slider', 'value'),
+)
+def update_output(genre, pop_range):
+    return plot_bar(genre, pop_range)
+
+# Receive input from user and update dropdown list options
 @app.callback(
     Output("artist_names", "options"),
     Input('genre_checklist', 'value'),
@@ -189,18 +202,7 @@ def update_multi_options(genre, pop_range):
     return [
         o for o in suggested_list
     ]
-
-# Receive input from user and create plot
-@app.callback(
-    Output('plot_bar', 'srcDoc'),
-    #Output('plot_3','srcDoc'),
-    Input('genre_checklist', 'value'),
-    Input('pop_slider', 'value'),
-)
-def update_output(genre, pop_range):
-    return plot_bar(genre, pop_range)
-
-# Receive input from user and create plot 2
+# Receive input from user & dropdown list and create plot 2
 @app.callback(
     # Output("warning", "children"),
     Output('plot_2','srcDoc'), 
