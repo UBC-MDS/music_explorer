@@ -71,7 +71,7 @@ app.layout = dbc.Container([
                 min=0,
                 max=100,
                 value=[50, 100],
-                marks={0:{"label":"0"}, 50: {"label": "50"}, 100: {"label": "100"}}
+                marks={0:{"label":"0"}, 25:{"label":"25"}, 50: {"label": "50"}, 75:{"label":"75"}, 100: {"label": "100"}}
                 ),
             html.Br(),
             html.Div(html.P("Select the music genre"),
