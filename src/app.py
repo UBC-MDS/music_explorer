@@ -8,10 +8,12 @@ alt.data_transformers.disable_max_rows()
 df = pd.read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv", 
 index_col=0).rename(
     columns={'playlist_genre': 'genre',  
-    'duration_ms': 'duration(ms)', 'track_popularity':'popularity'}, inplace=False)
+    'duration_ms': 'duration(ms)', 'track_popularity':'popularity'}, inplace=False).dropna()
 
 genre = sorted(list(df["genre"].dropna().unique()))
 #subgenre = sorted(list(df["subgenre"].dropna().unique()))
+
+suggested_list=sorted(df["track_artist"].unique())
 
 def plot_bar(genre,pop_range):
     plot_df = df[df.genre.isin(genre)]
@@ -35,6 +37,48 @@ def plot_bar(genre,pop_range):
         .configure_axis(labelFontSize=20, titleFontSize=20)
     )
     return chart.to_html()
+
+def plot_2(artist, genre, pop_range):
+    """manage text input and creating plot_2"""
+    pop_min = pop_range[0]
+    pop_max = pop_range[1]
+    filtered_df = df.query("track_artist == @artist and genre in @genre and popularity > @pop_min and popularity < @pop_max")
+    # Show warning if the filtered dataframe doesn't exist
+    warning=''
+    if artist!="":
+        if filtered_df.empty:
+            warning = "Invalid artist name!"
+    if filtered_df.empty:
+        filtered_df = df.query("genre in @genre and popularity > @pop_min and popularity < @pop_max")
+        artist_list = filtered_df.groupby("track_artist")["track_artist"].size().nlargest(5).reset_index(name="count")["track_artist"].tolist()
+        filtered_df = filtered_df[filtered_df.track_artist.isin(artist_list)]
+    filtered_df["year"]= filtered_df["track_album_release_date"].str[:4]
+
+    # Create plot 2 scatter
+    chart = (
+        alt.Chart(filtered_df)
+        .mark_point(size=20)
+        .encode(
+            y=alt.Y("popularity", title="Popularity", scale = alt.Scale(zero=False)),
+            x=alt.X("year", title="Year"),
+            color=alt.Color("track_artist", title = "Artist"),
+            tooltip=[alt.Tooltip("track_artist", title="Artist"), alt.Tooltip("track_name",title="Song title")]
+        )
+    )
+    # Adding plot 2 line
+    chart = ((chart + (chart.mark_line(size=3).encode(
+        y=alt.Y("mean(popularity)", title="Popularity"), 
+        tooltip=[
+            alt.Tooltip("track_artist", title="Artist"), 
+            alt.Tooltip("mean(popularity)",title="Average popularity")
+            ]))).properties(width=300, height=100)
+    .properties(width=400, height=300)
+    .configure_axisX(labelAngle=-45, labelFontSize=20, titleFontSize=20)
+    .configure_axisY(labelFontSize=20, titleFontSize=20))
+
+    return warning, chart.to_html()
+
+
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
@@ -105,7 +149,11 @@ app.layout = dbc.Container([
        dbc.Col([
            dbc.Card([
                dbc.CardHeader(html.Label("plot 2"), style={'font-size':16}),
-               html.Iframe(id="plot_2",style={"width" : "200%", "height":"300px"})
+               dbc.Input(id='artist_name', type='text', list='list-suggested-inputs', value='', placeholder="Enter artist name of your interest"),
+               html.Div(id="warning"),
+               html.Datalist(id='list-suggested-inputs', children=[html.Option(value=name) for name in  suggested_list]),
+               html.Iframe(id="plot_2",
+               style={'border-width': '10', 'width': '500px', 'height': '340px'})
            ])
        ]),
 
@@ -121,19 +169,30 @@ app.layout = dbc.Container([
 
 ])
 
+
+
+
+# Receive input from user and create plot
 @app.callback(
     Output('plot_bar', 'srcDoc'),
     #Output('plot_3','srcDoc'),
-    #Output('plot_2','srcDoc'),
     Input('genre_checklist', 'value'),
-    Input('pop_slider', 'value')
-    
+    Input('pop_slider', 'value'),
 )
-
-
-
 def update_output(genre, pop_range):
     return plot_bar(genre, pop_range)
+
+# Receive input from user and create plot 2
+@app.callback(
+    Output("warning", "children"),
+    Output('plot_2','srcDoc'), 
+    Input('genre_checklist', 'value'),
+    Input('pop_slider', 'value'),
+    Input("artist_name", "value"),
+)
+def update_output(genre, pop_range, artist):
+    warning, plot2 = plot_2(artist, genre, pop_range)
+    return  warning, plot2
 
 if __name__ == '__main__':
     app.run_server(debug=True)
