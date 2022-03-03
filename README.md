@@ -21,6 +21,23 @@ The dashboard mainly contains:
 
 ![](https://github.com/UBC-MDS/music_explorer/blob/main/img/app.jpeg)
 
+
+## Usage and Installation
+
+Install the requirements:
+```
+pip install -r requirements.txt
+```
+
+Install with Conda environment:
+```
+conda create --name music_explorer --file requirements.txt
+```
+Run the dashboard: The dashboard could then be accessed locally in localhost:8050
+```
+python src/app.py
+```
+
 ## Contribution
 
 We welcome all feedback and contributions. If you are interested in contributing, check out the contributing guidelines [here](https://github.com/UBC-MDS/music_explorer/blob/main/CONTRIBUTING.md). Please note that this project is released with a [Code of Conduct](https://github.com/UBC-MDS/music_explorer/blob/main/CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
