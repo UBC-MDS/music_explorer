@@ -13,6 +13,7 @@ index_col=0).rename(
 genre = sorted(list(df["genre"].dropna().unique()))
 #subgenre = sorted(list(df["subgenre"].dropna().unique()))
 
+# plot bar plot for genres
 def plot_bar(genre,pop_range):
     plot_df = df[df.genre.isin(genre)]
 
@@ -36,11 +37,13 @@ def plot_bar(genre,pop_range):
     )
     return chart.to_html()
 
+
+#app Dash and server
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
 
 
-
+#Layout
 app.layout = dbc.Container([
     dbc.Row(
         html.Div(html.H1(children="Spotify Music Explorer",
@@ -123,8 +126,6 @@ app.layout = dbc.Container([
 
 @app.callback(
     Output('plot_bar', 'srcDoc'),
-    #Output('plot_3','srcDoc'),
-    #Output('plot_2','srcDoc'),
     Input('genre_checklist', 'value'),
     Input('pop_slider', 'value')
     
