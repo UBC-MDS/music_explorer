@@ -5,7 +5,7 @@ import pandas as pd
 
 alt.data_transformers.disable_max_rows()
 
-df = pd.read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv", 
+df = pd.read_csv("https://raw.githubusercontent.com/UBC-MDS/music_explorer/main/data/spotify_songs.csv", 
 index_col=0).rename(
     columns={'playlist_genre': 'genre',  
     'duration_ms': 'duration(ms)', 'track_popularity':'popularity'}, inplace=False).dropna()
@@ -45,7 +45,7 @@ def plot_2(artist, genre, pop_range):
     pop_min = pop_range[0]
     pop_max = pop_range[1]
     filtered_df = df.query("genre in @genre and popularity > @pop_min and popularity < @pop_max").copy()
-    if artist == None:
+    if artist == None or artist == []:
         artist = filtered_df.groupby("track_artist")["track_artist"].size().nlargest(5).reset_index(name="count")["track_artist"].tolist()
     filtered_df = filtered_df.query("track_artist in @artist").copy()
     filtered_df["year"]= filtered_df["track_album_release_date"].str[:4]
@@ -87,8 +87,6 @@ def plot_2(artist, genre, pop_range):
 
     return chart.to_html()
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
-server = app.server
 
 #Plot 3 scatter
 
@@ -113,6 +111,9 @@ def plot_3(feature, genre, pop_range):
 
     return chart.to_html()
 
+
+app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+server = app.server
 
 #Layout
 app.layout = dbc.Container([
@@ -178,7 +179,7 @@ app.layout = dbc.Container([
    dbc.Row([
        dbc.Col([
            dbc.Card([
-               dbc.CardHeader(html.Label("What are the most prolific artists' popularity overtime (within the selected range)? "), style={'font-size':16}),
+               dbc.CardHeader(html.Label("What are some artists' popularity trend, within the selected range and genres? "), style={'font-size':16}),
                dcc.Dropdown(id="artist_names", multi=True),
             #    dbc.Input(id='artist_name', type='text', list='list-suggested-inputs', value='', placeholder="Enter a specifc artist name"),
             #    html.Div(id="warning"),
