@@ -11,6 +11,7 @@ index_col=0).rename(
     'duration_ms': 'duration(ms)', 'track_popularity':'popularity'}, inplace=False).dropna()
 
 genre = sorted(list(df["genre"].dropna().unique()))
+features = ["danceability","energy","key","mode","speechiness","acousticness","liveness","valence"]
 
 
 # plot bar plot for genres
@@ -80,7 +81,7 @@ def plot_2(artist, genre, pop_range):
             alt.Tooltip("track_artist", title="Artist"), 
             alt.Tooltip("mean(popularity)",title="Average popularity")
             ])) +text )
-    .properties(width=400, height=250)
+    .properties(width=350, height=250)
     .configure_axisX(labelAngle=-45, labelFontSize=12, titleFontSize=18)
     .configure_axisY(labelFontSize=16, titleFontSize=18))
 
@@ -88,6 +89,27 @@ def plot_2(artist, genre, pop_range):
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
+
+#Plot 3 scatter
+
+def plot_3(feature, genre, pop_range):
+    """creating plot_3"""
+    pop_min = pop_range[0]
+    pop_max = pop_range[1]
+    #filtered_df = df.query("genre in @genre and popularity > @pop_min and popularity < @pop_max").copy()
+
+    plot_df = df[df.genre.isin(genre)]
+
+   
+    chart = ((alt.Chart(plot_df[plot_df["popularity"].between(pop_min,pop_max)]).mark_point(opacity=0.2).encode(
+        x=feature,
+        y='popularity',
+        color='genre',
+        tooltip=['genre']).interactive()
+    ).properties(width=350, height=250)
+    ).configure_axis(labelFontSize=20, titleFontSize=20)
+
+    return chart.to_html()
 
 
 #Layout
@@ -117,7 +139,7 @@ app.layout = dbc.Container([
                 #step=1,
                 min=0,
                 max=100,
-                value=[50, 100],
+                value=[20, 100],
                 marks={0:{"label":"0"}, 25:{"label":"25"}, 50: {"label": "50"}, 75:{"label":"75"}, 100: {"label": "100"}}
                 ),
             html.Br(),
@@ -154,21 +176,28 @@ app.layout = dbc.Container([
    dbc.Row([
        dbc.Col([
            dbc.Card([
-               dbc.CardHeader(html.Label("What are the most prolific artists' popularity overtime (within the selected range)? Or specify artist name(s) of interest."), style={'font-size':16}),
+               dbc.CardHeader(html.Label("What are the most prolific artists' popularity overtime (within the selected range)? "), style={'font-size':16}),
                dcc.Dropdown(id="artist_names", multi=True),
             #    dbc.Input(id='artist_name', type='text', list='list-suggested-inputs', value='', placeholder="Enter a specifc artist name"),
             #    html.Div(id="warning"),
             #    html.Datalist(id='list-suggested-inputs', children=[html.Option(value=name) for name in  suggested_list]),
 
                html.Iframe(id="plot_2",
-               style={'border-width': '10', 'width': '500px', 'height': '340px'})
+               style={'border-width': '10', 'width': '200%', 'height': '340px'})
            ])
        ]),
 
        dbc.Col([
            dbc.Card([
-               dbc.CardHeader(html.Label("plot 3"), style={'font-size':16}),
-               html.Iframe(id="plot_3",style={'width': '200%', 'height': '300px'})
+               dbc.CardHeader(html.Label("What's the difference between features and the popularity? "), style={'font-size':16}),
+               dcc.Dropdown(id="features",
+               value='danceability',
+               options=[{'label': col, 'value': col} for col in features]),
+            
+
+               html.Iframe(id="plot_3",
+               style={'border-width': '10', 'width': '200%', 'height': '340px'})
+               
            ])
        ])
 
@@ -212,7 +241,19 @@ def update_multi_options(genre, pop_range):
     Input("artist_names", "value"),
 )
 def update_output(genre, pop_range, artist):
-    return  plot_2(artist, genre, pop_range)
+    return plot_2(artist, genre, pop_range)
+
+# Receive input from user & dropdown list and create plot 3
+@app.callback(
+    Output('plot_3', 'srcDoc'),
+    Input('features', 'value'),
+    Input('genre_checklist', 'value'),
+    Input('pop_slider', 'value')
+)
+
+def update_output(features, genre, pop_range):
+    return plot_3(features, genre, pop_range)
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
