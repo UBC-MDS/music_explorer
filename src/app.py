@@ -189,7 +189,7 @@ app.layout = dbc.Container([
 
        dbc.Col([
            dbc.Card([
-               dbc.CardHeader(html.Label("What's the relationship between features and the popularity? "), style={'font-size':16}),
+               dbc.CardHeader(html.Label("What's the relationship between songs' features and the popularity? "), style={'font-size':16}),
                dcc.Dropdown(id="features",
                value='danceability',
                options=[{'label': col, 'value': col} for col in features]),
