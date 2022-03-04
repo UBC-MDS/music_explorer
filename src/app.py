@@ -11,7 +11,7 @@ index_col=0).rename(
     'duration_ms': 'duration(ms)', 'track_popularity':'popularity'}, inplace=False).dropna()
 
 genre = sorted(list(df["genre"].dropna().unique()))
-features = ["danceability","energy","key","mode","speechiness","acousticness","liveness","valence"]
+features = ["danceability","energy","mode","speechiness","acousticness","liveness","valence","loudness"]
 
 
 # plot bar plot for genres
@@ -81,7 +81,7 @@ def plot_2(artist, genre, pop_range):
             alt.Tooltip("track_artist", title="Artist"), 
             alt.Tooltip("mean(popularity)",title="Average popularity")
             ])) +text )
-    .properties(width=350, height=250)
+    .properties(width=370, height=250)
     .configure_axisX(labelAngle=-45, labelFontSize=12, titleFontSize=18)
     .configure_axisY(labelFontSize=16, titleFontSize=18))
 
@@ -105,8 +105,10 @@ def plot_3(feature, genre, pop_range):
         x=feature,
         y='popularity',
         color='genre',
-        tooltip=['genre']).interactive()
-    ).properties(width=350, height=250)
+        tooltip=[alt.Tooltip("genre", title="Genre"),
+        alt.Tooltip("track_name",title="Song title"),
+        alt.Tooltip("track_artist", title="Artist")]).interactive()
+    ).properties(width=370, height=250)
     ).configure_axis(labelFontSize=20, titleFontSize=20)
 
     return chart.to_html()
