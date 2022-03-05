@@ -6,15 +6,17 @@ Authors: Dongxiao Li, Rong Li, Zihan Zhou
 
 The full proposal can be found in [our proposal file](https://github.com/UBC-MDS/music_explorer/blob/main/docs/proposal.md).
 
-The `music_explorer` dashboard is designed for the purpose of helping music lovers and members of Spotify music platform to explore music trends, discover popular songs in their interested genres and filter musics with high quality. 
+The app link can be found [here](https://musicexplore.herokuapp.com/).
+
+The `music_explorer` dashboard is designed for the purpose of helping music lovers and members of Spotify music platform to explore the trends of songs and artists.
 
 The dashboard mainly contains:
 
-- a bar chart that shows the music popularity for each music genres and the genre with the highest popularity being highlighted
+- a bar chart that shows the number of songs in the genres that users selected and the popularity range they filtered.
 
-- a scatter plot between different music features (can be selected using the dropdown button by users) and popularity.
+- a scatter plot between different music features (can be selected using the dropdown button by users) of songs and their popularity.
 
-- a table that returns top 10 popular songs given the genres selected as well as the popularity range filtered. 
+- a time-series line plot that shows artists' popularity trend within the selected range and genres? Users can use the dropdown menu to select one or more artists that they are interested in. 
 
 
 ## App Sketch  
