@@ -4,9 +4,9 @@ Authors: Dongxiao Li, Rong Li, Zihan Zhou
 
 ## Description of App
 
-The full proposal can be found in [our proposal file](https://github.com/UBC-MDS/music_explorer/blob/main/docs/proposal.md).
-
 The app link can be found [here](https://musicexplore.herokuapp.com/).
+
+The full proposal can be found in [our proposal file](https://github.com/UBC-MDS/music_explorer/blob/main/docs/proposal.md).
 
 The `music_explorer` dashboard is designed for the purpose of helping music lovers and members of Spotify music platform to explore the trends of songs and artists.
 
@@ -17,11 +17,9 @@ The dashboard mainly contains:
 - a scatter plot between different music features (can be selected using the dropdown button by users) of songs and their popularity.
 
 - a time-series line plot that shows artists' popularity trend within the selected range and genres? Users can use the dropdown menu to select one or more artists that they are interested in. 
+ 
 
-
-## App Sketch  
-
-![](https://github.com/UBC-MDS/music_explorer/blob/main/img/app.jpeg)
+![](https://github.com/UBC-MDS/music_explorer/blob/main/img/app.gif)
 
 
 ## Usage and Installation
