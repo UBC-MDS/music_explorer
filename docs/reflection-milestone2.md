@@ -10,4 +10,4 @@ In terms of future improvements, firstly we will polish our coding and eliminate
 
 Next, the interactive features we have added so far are only limited to individual graphs, and there is no interaction between the features we have implemented so far. Ideally, if users can select one thing on one of our graphs and be able to see changes in all three graphs, user experience can be improved significantly.
 
-Lastly, one more future improvement that we aim to do is to have a feature in the dashboard that is able to generate personalized recommendations for users. The recommendation will be based on genres that users like 
+Lastly, one more future improvement that we aim to do is to have a feature in the dashboard that is able to generate personalized recommendations for users. The recommendation will be based on their typical music taste, such as genres they like, music categories they identify with, etc. With this feature added, users will find the dashboard much more informative and helpful. Due to the time limit, it might be difficult to finish the implementation of this feature.
