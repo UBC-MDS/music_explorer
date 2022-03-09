@@ -1,3 +1,4 @@
+from tkinter.ttk import Style
 from dash import Dash, html, dcc, Input, Output, State
 import altair as alt
 import dash_bootstrap_components as dbc
@@ -112,16 +113,81 @@ def plot_3(feature, genre, pop_range):
     return chart.to_html()
 
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = Dash(__name__, external_stylesheets=[dbc.themes.MORPH])
 server = app.server
-
+app.title = "Music Explorer"
 #Layout
+
+
 app.layout = dbc.Container([
+    dbc.Row([dbc.Col(
+                        html.Div(
+                            html.Img(src="assets/icon.png", height="60px")
+                        ),
+                        id="logo-img",
+                        width=1,
+                        style={"padding-top": "5px", "padding-left": "30px", 'background': "#074983",  },
+                    ),
+        dbc.Col(html.Div("Spotify Music Explorer",
+            style={'font-size': "300%", 'color':"#FFF",'text-aligh':'center', 
+            # 'background': "#074983",
+            "background-image": "linear-gradient(to right, #074983,#9198e5)"
+            },)
+            
+        )],
+        className="g-0"),
+    dbc.Col(
     dbc.Row(
-        html.Div(html.H1(children="Spotify Music Explorer",
-            style={'font-size': "300%", 'color':'#107a53','text-aligh':'center'}),
-        )),
-    html.Br(),
+        [
+            html.Br(),
+            html.P(" "),
+            html.P(" "),
+            html.H3(
+                # "World COVID-19 Dashboard", style = {"font": "Helvetica", "font-size": "25px", "text-align":"center"}
+            ),
+            html.P(" "),
+            html.P(" "),
+            html.Br(),
+            html.Br(),
+            html.P(
+                "The music explorer dashboard is designed for the purpose of helping music lovers and members of Spotify music platform to explore the trends of songs and artists.",
+            style = {"text-align": "justify"}),
+            html.Hr(),
+            html.Br(),
+            html.Br(),
+            # html.B("Country Filter"),
+            html.P(
+                # "Use this filter to add or remove a country from the analysis",
+            ),
+            html.Br(),
+            html.Br(),
+            # country_selector,
+            html.Br(),
+            html.Br(),
+        ],
+    ),
+     width=2,
+    style={
+
+    "position": "fixed",
+    "top": 0,
+    "left": 0,
+    "bottom": 0,
+    #  "width": "12rem",
+    "padding": "2rem 1rem",
+    # "background-image": "url(/assets/wind-energy.jpg)",
+    # # "background-color": "#98FB98",
+    # "background-color": "rgba(255,255,255,0.6)",
+    "background-blend-mode": "overlay",
+
+
+    },
+), 
+        
+    # html.Br(),
+    dbc.Container([
+        
+
    dbc.Row([
        dbc.Col([
            #Slider and checklist
@@ -207,7 +273,18 @@ app.layout = dbc.Container([
    ])
   ])
 
-])
+    ],
+    style={ 
+        "position": "absolute",
+        "left": "17%",
+        "top": "75px",
+        }
+    )
+],
+style={
+    "max-width": "100%",
+    "padding": "0"
+})
 
 
 
