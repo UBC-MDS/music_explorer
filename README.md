@@ -22,9 +22,12 @@ The dashboard mainly contains:
 ![](https://github.com/UBC-MDS/music_explorer/blob/main/img/app.gif)
 
 
-## Usage and Installation
+## Usage
 
-Install the requirements:
+Installation is not required when run the dashboard remotely, 
+
+Finally, open the app in the followin URL http://localhost:8000/
+ the requirements:
 ```
 pip install -r requirements.txt
 ```
@@ -36,6 +39,13 @@ conda create --name music_explorer --file requirements.txt
 Run the dashboard: The dashboard could then be accessed locally in localhost:8050
 ```
 python src/app.py
+```
+
+To run the app locally using Docker, please run the following commands after cloning the repo:
+```
+cd music_explorer
+docker build --tag music_explorer .
+docker-compose up
 ```
 
 ## Contribution

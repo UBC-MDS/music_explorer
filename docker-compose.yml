@@ -3,7 +3,7 @@ version: '3'
 services:
   # main application
   myapp:
-    container_name: music_explorer
+    container_name: music-explorer
     build:
       .
     ports:
