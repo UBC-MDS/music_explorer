@@ -30,12 +30,13 @@ def plot_bar(genre,pop_range):
             .encode(
                 y=alt.Y("genre", title="Genre", sort="-x"),
                 x="count()",
-                color="genre",
+                color=alt.Color("genre",legend=None),
                 tooltip='count()'
             ).interactive()
         )
-        .properties(width=400, height=250)
+        .properties(width=370, height=250)
         .configure_axis(labelFontSize=20, titleFontSize=20)
+        .configure_view(fill='#E4EBF5')
     )
     return chart.to_html()
 
@@ -58,6 +59,7 @@ def plot_2(artist, genre, pop_range):
         .encode(
             y=alt.Y("popularity", title="Popularity", scale = alt.Scale(zero=False)),
             x=alt.X("year", title="Year"),
+            
             color=alt.Color("track_artist", title = "Artist", legend=None),
             tooltip=[alt.Tooltip("track_artist", title="Artist"), alt.Tooltip("track_name",title="Song title"), alt.Tooltip("genre",title="Genre")]
         )
@@ -84,7 +86,10 @@ def plot_2(artist, genre, pop_range):
             ])) +text )
     .properties(width=370, height=250)
     .configure_axisX(labelAngle=-45, labelFontSize=12, titleFontSize=18)
-    .configure_axisY(labelFontSize=16, titleFontSize=18))
+    .configure_axisY(labelFontSize=16, titleFontSize=18)
+    .configure_view(fill='#E4EBF5')
+    .interactive())
+    
 
     return chart.to_html()
 
@@ -98,17 +103,18 @@ def plot_3(feature, genre, pop_range):
     #filtered_df = df.query("genre in @genre and popularity > @pop_min and popularity < @pop_max").copy()
 
     plot_df = df[df.genre.isin(genre)]
-
+    if feature == None or feature == []:
+        feature = "danceability"
    
     chart = ((alt.Chart(plot_df[plot_df["popularity"].between(pop_min,pop_max)]).mark_point(opacity=0.2).encode(
-        x=feature,
-        y='popularity',
+        x=alt.X(feature, title=feature.capitalize()),
+        y=alt.Y("popularity", title="Popularity", scale = alt.Scale(zero=False)),
         color='genre',
         tooltip=[alt.Tooltip("genre", title="Genre"),
         alt.Tooltip("track_name",title="Song title"),
         alt.Tooltip("track_artist", title="Artist")]).interactive()
     ).properties(width=370, height=250)
-    ).configure_axis(labelFontSize=20, titleFontSize=20)
+    ).configure_axis(labelFontSize=20, titleFontSize=20).configure_view(fill='#E4EBF5')
 
     return chart.to_html()
 
@@ -120,33 +126,89 @@ app.title = "Music Explorer"
 
 
 app.layout = dbc.Container([
-    dbc.Row([dbc.Col(
-                        html.Div(
-                            html.Img(src="assets/icon.png", height="60px")
+            dbc.Toast(
+            [html.A(
+                "GitHub",
+                href="https://github.com/UBC-MDS/music_explorer",
+                style={ "text-decoration": "underline"},
+            ),
+            html.P(
+                "The dashboard was created by Dongxiao Li, Rong Li, Zihan Zhou. It is licensed under the terms of the MIT license."
+            ),
+            html.A(
+                "Data",
+                href="https://raw.githubusercontent.com/UBC-MDS/music_explorer/main/data/spotify_songs.csv",
+                style={"text-decoration": "underline"},
+            ),
+            html.P(
+                "The dataset was derived from the open Spotify music database."
+            ),],
+            id="toast",
+            header="About",
+            is_open=False,
+            dismissable=True,
+            # icon="info",
+            # top: 66 positions the toast below the navbar
+
+            style={
+                "position": "fixed", 
+                "top": 75, 
+                "right": 10, 
+                "width": 350, 
+                "z-index": "1"},
+        ),
+
+
+    dbc.Row([
+
+    html.Div(
+        html.Img(src="assets/icon.png", height="60px"),
+        style ={"position" : "absolute",
+                "top": "10px", 
+                "left": 0, 
+                "width": 70, }
                         ),
-                        id="logo-img",
-                        width=1,
-                        style={"padding-top": "5px", "padding-left": "30px", 'background': "#074983",  },
-                    ),
-        dbc.Col(html.Div("Spotify Music Explorer",
-            style={'font-size': "300%", 'color':"#FFF",'text-aligh':'center', 
-            # 'background': "#074983",
-            "background-image": "linear-gradient(to right, #074983,#9198e5)"
-            },)
-            
-        )],
-        className="g-0"),
+
+            html.Div("Spotify Music Explorer",
+            style={'font-size': "260%", 'color':"#FFF",'text-aligh':'left', 
+            "padding": "0",
+            "white-space":"nowrap",
+            "position" : "absolute",
+            "top": 10, 
+            "left": 90, 
+            "width": 800, 
+            },),
+
+            dbc.Button(
+            "Learn more",
+            id="toast-toggle",
+            color="#074983",
+            n_clicks=0,
+            style={
+
+                "white-space":"nowrap",
+                "top": 9,
+                "position" : "absolute",
+                "right":"20px",
+                'text-aligh':'center',
+                "width": 160, 
+            }
+            )
+
+        ],
+        id="header",
+        className="g-0",
+        style={
+            "background-image": "linear-gradient(to right, #074983,#9198e5)",
+            "width":"100%",
+            "height":80
+            }),
     dbc.Col(
     dbc.Row(
         [
             html.Br(),
-            html.P(" "),
-            html.P(" "),
-            html.H3(
-                # "World COVID-19 Dashboard", style = {"font": "Helvetica", "font-size": "25px", "text-align":"center"}
-            ),
-            html.P(" "),
-            html.P(" "),
+            html.Br(),
+            html.Br(),
             html.Br(),
             html.Br(),
             html.P(
@@ -169,16 +231,13 @@ app.layout = dbc.Container([
      width=2,
     style={
 
-    "position": "fixed",
+    # "position": "fixed",
     "top": 0,
     "left": 0,
     "bottom": 0,
     #  "width": "12rem",
     "padding": "2rem 1rem",
-    # "background-image": "url(/assets/wind-energy.jpg)",
-    # # "background-color": "#98FB98",
-    # "background-color": "rgba(255,255,255,0.6)",
-    "background-blend-mode": "overlay",
+    # "background-blend-mode": "overlay",
 
 
     },
@@ -233,10 +292,11 @@ app.layout = dbc.Container([
        dbc.Col([
             dbc.Card([
                dbc.CardHeader(html.Label("How many songs in the genres selected?",style={"font-size":16})),
+               html.Br(),
                html.Iframe(
                    id = "plot_bar",
                    srcDoc = plot_bar(genre=["pop","rock"], pop_range=[50,100]),
-                   style={'border-width': '10', 'width': '500px', 'height': '340px'})      
+                   style={'border-width': '10', 'width': '500px', 'height': '337px'})      
            ])
         ])
         ]),
@@ -265,19 +325,22 @@ app.layout = dbc.Container([
             
 
                html.Iframe(id="plot_3",
-               style={'border-width': '10', 'width': '200%', 'height': '340px'})
+               style={'border-width': '10', 'width': '100%', 'height': '340px'})
                
            ])
        ])
 
-   ])
+   ]),
+   html.Br(),
+   html.Br(),
   ])
 
     ],
     style={ 
         "position": "absolute",
         "left": "17%",
-        "top": "75px",
+        "max-width": "83%",
+        "top": "80px",
         }
     )
 ],
@@ -333,6 +396,15 @@ def update_output(genre, pop_range, artist):
 
 def update_output(features, genre, pop_range):
     return plot_3(features, genre, pop_range)
+
+@app.callback(
+    Output("toast", "is_open"),
+    [Input("toast-toggle", "n_clicks")],
+)
+def open_toast(n):
+    if n:
+        return True
+    return False
 
 
 if __name__ == '__main__':
