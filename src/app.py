@@ -1,4 +1,3 @@
-from tkinter.ttk import Style
 from dash import Dash, html, dcc, Input, Output, State
 import altair as alt
 import dash_bootstrap_components as dbc
