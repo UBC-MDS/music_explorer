@@ -44,7 +44,7 @@ python src/app.py
 To run the app locally using Docker, please run the following commands after cloning the repo:
 ```
 cd music_explorer
-docker build --tag music_explorer .
+<!-- docker build --tag music_explorer . -->
 docker-compose up
 ```
 

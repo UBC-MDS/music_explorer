@@ -1,4 +1,4 @@
-from dash import Dash, html, dcc, Input, Output, State
+from dash import Dash, html, dcc, Input, Output, callback
 import altair as alt
 import dash_bootstrap_components as dbc
 import pandas as pd
@@ -59,7 +59,7 @@ def plot_2(artist, genre, pop_range):
             y=alt.Y("popularity", title="Popularity", scale = alt.Scale(zero=False)),
             x=alt.X("year", title="Year"),
             
-            color=alt.Color("track_artist", title = "Artist", legend=None),
+            color=alt.Color("track_artist", title = "Artist", legend=None, scale=alt.Scale(scheme='dark2')),
             tooltip=[alt.Tooltip("track_artist", title="Artist"), alt.Tooltip("track_name",title="Song title"), alt.Tooltip("genre",title="Genre")]
         )
     )
@@ -87,7 +87,7 @@ def plot_2(artist, genre, pop_range):
     .configure_axisX(labelAngle=-45, labelFontSize=12, titleFontSize=18)
     .configure_axisY(labelFontSize=16, titleFontSize=18)
     .configure_view(fill='#E4EBF5')
-    .interactive())
+    )
     
 
     return chart.to_html()
@@ -105,7 +105,7 @@ def plot_3(feature, genre, pop_range):
     if feature == None or feature == []:
         feature = "danceability"
    
-    chart = ((alt.Chart(plot_df[plot_df["popularity"].between(pop_min,pop_max)]).mark_point(opacity=0.2).encode(
+    chart = ((alt.Chart(plot_df[plot_df["popularity"].between(pop_min,pop_max)]).mark_point(opacity=0.2, size=18).encode(
         x=alt.X(feature, title=feature.capitalize()),
         y=alt.Y("popularity", title="Popularity", scale = alt.Scale(zero=False)),
         color='genre',
@@ -118,9 +118,8 @@ def plot_3(feature, genre, pop_range):
     return chart.to_html()
 
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.MORPH])
+app = Dash(__name__, title = "Music Explorer", external_stylesheets=[dbc.themes.MORPH])
 server = app.server
-app.title = "Music Explorer"
 #Layout
 
 
@@ -146,8 +145,6 @@ app.layout = dbc.Container([
             header="About",
             is_open=False,
             dismissable=True,
-            # icon="info",
-            # top: 66 positions the toast below the navbar
 
             style={
                 "position": "fixed", 
@@ -210,39 +207,22 @@ app.layout = dbc.Container([
             html.Br(),
             html.Br(),
             html.Br(),
+            html.Br(),
             html.P(
                 "The music explorer dashboard is designed for the purpose of helping music lovers and members of Spotify music platform to explore the trends of songs and artists.",
-            style = {"text-align": "justify"}),
-            html.Hr(),
-            html.Br(),
-            html.Br(),
-            # html.B("Country Filter"),
-            html.P(
-                # "Use this filter to add or remove a country from the analysis",
-            ),
-            html.Br(),
-            html.Br(),
-            # country_selector,
-            html.Br(),
-            html.Br(),
+            style = {"font-size":20}),
+
         ],
     ),
      width=2,
     style={
-
-    # "position": "fixed",
     "top": 0,
     "left": 0,
     "bottom": 0,
-    #  "width": "12rem",
     "padding": "2rem 1rem",
-    # "background-blend-mode": "overlay",
-
-
     },
 ), 
         
-    # html.Br(),
     dbc.Container([
         
 
@@ -279,7 +259,7 @@ app.layout = dbc.Container([
                 inputClassName="genre-input",
                 labelClassName="genre-label",
                 options=[{"label": i, "value": i} for i in genre],                        
-                value=["pop","rock"],
+                value=["pop","rap","rock"],
                 labelStyle={"display":"block",
                             "margin-left": "10px"}),
             ])
@@ -294,7 +274,7 @@ app.layout = dbc.Container([
                html.Br(),
                html.Iframe(
                    id = "plot_bar",
-                   srcDoc = plot_bar(genre=["pop","rock"], pop_range=[50,100]),
+                   srcDoc = plot_bar(genre=["pop","rap","rock"], pop_range=[50,100]),
                    style={'border-width': '10', 'width': '500px', 'height': '337px'})      
            ])
         ])
@@ -311,7 +291,7 @@ app.layout = dbc.Container([
             #    html.Datalist(id='list-suggested-inputs', children=[html.Option(value=name) for name in  suggested_list]),
 
                html.Iframe(id="plot_2",
-               style={'border-width': '10', 'width': '200%', 'height': '340px'})
+               style={'border-width': '10', 'width': '200%', 'height': '350px'})
            ])
        ]),
 
@@ -324,7 +304,7 @@ app.layout = dbc.Container([
             
 
                html.Iframe(id="plot_3",
-               style={'border-width': '10', 'width': '100%', 'height': '340px'})
+               style={'border-width': '10', 'width': '100%', 'height': '350px'})
                
            ])
        ])
