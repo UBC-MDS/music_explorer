@@ -4,7 +4,7 @@ Authors: Dongxiao Li, Rong Li, Zihan Zhou
 
 ## Description of App
 
-The app link can be found [here](https://musicexplore.herokuapp.com/).
+Our Music Explorer dashboard was deployed on Heroku, link can be found [here](https://musicexplore.herokuapp.com/).
 
 The full proposal can be found in [our proposal file](https://github.com/UBC-MDS/music_explorer/blob/main/docs/proposal.md).
 
@@ -24,30 +24,14 @@ The dashboard mainly contains:
 
 ## Usage
 
-Installation is not required when run the dashboard remotely, 
+Installation is not required when run the dashboard remotely: <https://musicexplore.herokuapp.com/>
 
-Finally, open the app in the followin URL http://localhost:8000/
- the requirements:
-```
-pip install -r requirements.txt
-```
-
-Install with Conda environment:
-```
-conda create --name music_explorer --file requirements.txt
-```
-Run the dashboard: The dashboard could then be accessed locally in localhost:8050
-```
-python src/app.py
-```
-
-To run the app locally using Docker, please run the following commands after cloning the repo:
+If you wish to run the app locally using Docker, please run the following commands after cloning the repo:
 ```
 cd music_explorer
-docker build --tag music_explorer .
 docker-compose up
 ```
-
+Finally, open the app in the followin URL: http://localhost:8000/
 ## Contribution
 
 We welcome all feedback and contributions. If you are interested in contributing, check out the contributing guidelines [here](https://github.com/UBC-MDS/music_explorer/blob/main/CONTRIBUTING.md). Please note that this project is released with a [Code of Conduct](https://github.com/UBC-MDS/music_explorer/blob/main/CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
