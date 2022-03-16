@@ -176,7 +176,7 @@ app.layout = dbc.Container([
             },),
 
             dbc.Button(
-            "Learn more",
+            "About",
             id="toast-toggle",
             color="#074983",
             n_clicks=0,
@@ -187,7 +187,7 @@ app.layout = dbc.Container([
                 "position" : "absolute",
                 "right":"20px",
                 'text-aligh':'center',
-                "width": 160, 
+                "width": 120, 
             }
             )
 
@@ -208,9 +208,15 @@ app.layout = dbc.Container([
             html.Br(),
             html.Br(),
             html.Br(),
-            html.P(
+            html.P([
                 "The music explorer dashboard is designed for the purpose of helping music lovers and members of Spotify music platform to explore the trends of songs and artists.",
+                html.Br(),
+                html.Br(),
+                "Start using the dashboard by limiting the songs' popularity range and selecting the music genre you are interested in.",
+            ],
             style = {"font-size":20,
+                    'color': '#3F69A9',
+                    'font-family': 'sans-serif',
                     "position": "absolute",
                     "top": 40,
                     "left": 0,
@@ -227,7 +233,7 @@ app.layout = dbc.Container([
     "left": 0,
     "bottom": 0,
     "width":"100%",
-    "height":900,
+    "height":920,
     "padding": "2rem 1rem",
     "background-image": "url(/assets/background.jpg)",
     "background-color": "#E4EBF5",
@@ -244,12 +250,12 @@ app.layout = dbc.Container([
            dbc.Card([
                dbc.CardHeader(
                    html.Label("What kinds of music do you like to explore?",
-                   style={"font-size":16})),
+                   style={"font-size":18, 'text_aligh': 'left', 'color': '#3F69A9', 'font-family': 'sans-serif'})),
                dbc.CardBody([
                    dcc.Loading([
            html.Div(
                html.P("Popularity range"),
-                style={'text_aligh': 'left', 'color': '#0c5e45', 'font-family': 'sans-serif'}),
+                style={'text_aligh': 'left', 'color': '#3F69A9','font-family': 'sans-serif'}),
            html.Br(),
            dcc.RangeSlider(
                #className="slider_class",
@@ -258,12 +264,12 @@ app.layout = dbc.Container([
                 #step=1,
                 min=0,
                 max=100,
-                value=[20, 100],
+                value=[0, 100],
                 marks={0:{"label":"0"}, 25:{"label":"25"}, 50: {"label": "50"}, 75:{"label":"75"}, 100: {"label": "100"}}
                 ),
             html.Br(),
             html.Div(html.P("Select the music genre"),
-            style={'text_aligh': 'left', 'color': '#0c5e45', 'font-family': 'sans-serif'}),
+            style={'text_aligh': 'left', 'color': '#3F69A9', 'font-family': 'sans-serif'}),
             #html.Br(),
             dcc.Checklist(
                 id="genre_checklist",                    
@@ -271,9 +277,9 @@ app.layout = dbc.Container([
                 inputClassName="genre-input",
                 labelClassName="genre-label",
                 options=[{"label": i, "value": i} for i in genre],                        
-                value=["pop","rap","rock"],
+                value=["pop","rap","latin"],
                 labelStyle={"display":"block",
-                            "margin-left": "10px"}),
+                            "margin-left": "10px", 'color': '#3F69A9'}),
             ])
             ])
             ])
@@ -282,11 +288,11 @@ app.layout = dbc.Container([
         #plot graphs
        dbc.Col([
             dbc.Card([
-               dbc.CardHeader(html.Label("How many songs in the genres selected?",style={"font-size":16})),
+               dbc.CardHeader(html.Label("How many songs in the genres selected?",style={"font-size":18, 'text_aligh': 'left', 'color': '#3F69A9', 'font-family': 'sans-serif'})),
                html.Br(),
                html.Iframe(
                    id = "plot_bar",
-                   srcDoc = plot_bar(genre=["pop","rap","rock"], pop_range=[50,100]),
+                #    srcDoc = plot_bar(genre=["pop","rap","latin"], pop_range=[50,100]),
                    style={'border-width': '10', 'width': '100%', 'height': '337px'})      
            ])
         ])
@@ -296,7 +302,7 @@ app.layout = dbc.Container([
    dbc.Row([
        dbc.Col([
            dbc.Card([
-               dbc.CardHeader(html.Label("What are some artists' popularity trend, within the selected range and genres? "), style={'font-size':16}),
+               dbc.CardHeader(html.Label("What are some artists' popularity trend within the selected range? "), style={"font-size":18, 'text_aligh': 'left', 'color': '#3F69A9', 'font-family': 'sans-serif'}),
                dcc.Dropdown(id="artist_names", multi=True),
             #    dbc.Input(id='artist_name', type='text', list='list-suggested-inputs', value='', placeholder="Enter a specifc artist name"),
             #    html.Div(id="warning"),
@@ -309,7 +315,7 @@ app.layout = dbc.Container([
 
        dbc.Col([
            dbc.Card([
-               dbc.CardHeader(html.Label("What's the relationship between songs' features and the popularity? "), style={'font-size':16}),
+               dbc.CardHeader(html.Label("What's the relationship between songs' features and the popularity? "), style={"font-size":18, 'text_aligh': 'left', 'color': '#3F69A9', 'font-family': 'sans-serif'}),
                dcc.Dropdown(id="features",
                value='danceability',
                options=[{'label': col, 'value': col} for col in features]),
@@ -331,7 +337,7 @@ app.layout = dbc.Container([
         "position": "absolute",
         "left": "17%",
         "max-width": "83%",
-        "top": "80px",
+        "top": "90px",
         
         }
     )
