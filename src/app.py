@@ -210,16 +210,28 @@ app.layout = dbc.Container([
             html.Br(),
             html.P(
                 "The music explorer dashboard is designed for the purpose of helping music lovers and members of Spotify music platform to explore the trends of songs and artists.",
-            style = {"font-size":20}),
+            style = {"font-size":20,
+                    "position": "absolute",
+                    "top": 40,
+                    "left": 0,
+                    "bottom": 0,
+                    "width":"18%",}),
+                        html.Br(),
 
         ],
     ),
      width=2,
     style={
-    "top": 0,
+        "position": "absolute",
+    "top": 80,
     "left": 0,
     "bottom": 0,
+    "width":"100%",
+    "height":900,
     "padding": "2rem 1rem",
+    "background-image": "url(/assets/background.jpg)",
+    "background-color": "#E4EBF5",
+    "background-blend-mode": "overlay",
     },
 ), 
         
@@ -275,7 +287,7 @@ app.layout = dbc.Container([
                html.Iframe(
                    id = "plot_bar",
                    srcDoc = plot_bar(genre=["pop","rap","rock"], pop_range=[50,100]),
-                   style={'border-width': '10', 'width': '500px', 'height': '337px'})      
+                   style={'border-width': '10', 'width': '100%', 'height': '337px'})      
            ])
         ])
         ]),
@@ -320,12 +332,14 @@ app.layout = dbc.Container([
         "left": "17%",
         "max-width": "83%",
         "top": "80px",
+        
         }
     )
 ],
 style={
     "max-width": "100%",
-    "padding": "0"
+    "padding": "0",
+    
 })
 
 
