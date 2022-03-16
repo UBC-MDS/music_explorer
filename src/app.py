@@ -11,7 +11,8 @@ alt.data_transformers.disable_max_rows()
 # index_col=0).rename(
 #     columns={'playlist_genre': 'genre',  
 #     'duration_ms': 'duration(ms)', 'track_popularity':'popularity'}, inplace=False).dropna()
-# df.to_pickle("./data.pickle")
+# df["year"]= pd.to_datetime(df["track_album_release_date"].str[:4].astype(int), format="%Y")
+# df.to_pickle("./data/data.pickle")
 
 df = pd.read_pickle(r'./data/data.pickle')
 
@@ -36,7 +37,8 @@ def plot_bar(genre,pop_range):
                 x="count()",
                 color=alt.Color("genre",legend=None),
                 tooltip='count()'
-            ).interactive()
+            )
+            # .interactive()
         )
         .properties(width=370, height=250)
         .configure_axis(labelFontSize=20, titleFontSize=20)
@@ -54,7 +56,7 @@ def plot_2(artist, genre, pop_range):
     if artist == None or artist == []:
         artist = filtered_df.groupby("track_artist")["track_artist"].size().nlargest(5).reset_index(name="count")["track_artist"].tolist()
     filtered_df = filtered_df.query("track_artist in @artist").copy()
-    filtered_df["year"]= filtered_df["track_album_release_date"].str[:4]
+    # filtered_df["year"]= filtered_df["track_album_release_date"].str[:4].astype(int)
 
     # Create plot 2 scatter
     chart = (
@@ -62,7 +64,7 @@ def plot_2(artist, genre, pop_range):
         .mark_point(size=20)
         .encode(
             y=alt.Y("popularity", title="Popularity", scale = alt.Scale(zero=False)),
-            x=alt.X("year", title="Year"),
+            x=alt.X("year", title="Year", scale = alt.Scale(zero=False)),
             
             color=alt.Color("track_artist", title = "Artist", legend=None, scale=alt.Scale(scheme='dark2')),
             tooltip=[alt.Tooltip("track_artist", title="Artist"), alt.Tooltip("track_name",title="Song title"), alt.Tooltip("genre",title="Genre")]
@@ -295,10 +297,10 @@ app.layout = dbc.Container([
             dbc.Card([
                dbc.CardHeader(html.Label("How many songs in the genres selected?",style={"font-size":18, 'text_aligh': 'left', 'color': '#3F69A9', 'font-family': 'sans-serif'})),
                html.Br(),
-               html.Iframe(
+               dcc.Loading(html.Iframe(
                    id = "plot_bar",
                 #    srcDoc = plot_bar(genre=["pop","rap","latin"], pop_range=[50,100]),
-                   style={'border-width': '10', 'width': '100%', 'height': '337px'})      
+                   style={'border-width': '10', 'width': '100%', 'height': '337px'})      )
            ])
         ])
         ]),
@@ -313,8 +315,8 @@ app.layout = dbc.Container([
             #    html.Div(id="warning"),
             #    html.Datalist(id='list-suggested-inputs', children=[html.Option(value=name) for name in  suggested_list]),
 
-               html.Iframe(id="plot_2",
-               style={'border-width': '10', 'width': '200%', 'height': '350px'})
+               dcc.Loading(html.Iframe(id="plot_2",
+               style={'border-width': '10', 'width': '200%', 'height': '350px'}))
            ])
        ]),
 
@@ -326,8 +328,8 @@ app.layout = dbc.Container([
                options=[{'label': col, 'value': col} for col in features]),
             
 
-               html.Iframe(id="plot_3",
-               style={'border-width': '10', 'width': '100%', 'height': '350px'})
+               dcc.Loading(html.Iframe(id="plot_3",
+               style={'border-width': '10', 'width': '100%', 'height': '350px'}))
                
            ])
        ])
