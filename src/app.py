@@ -4,11 +4,16 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 
 alt.data_transformers.disable_max_rows()
+# alt.data_transformers.enable('data_server')
+# alt.data_transformers.enable('data_server_proxied')
 
-df = pd.read_csv("https://raw.githubusercontent.com/UBC-MDS/music_explorer/main/data/spotify_songs.csv", 
-index_col=0).rename(
-    columns={'playlist_genre': 'genre',  
-    'duration_ms': 'duration(ms)', 'track_popularity':'popularity'}, inplace=False).dropna()
+# df = pd.read_csv("https://raw.githubusercontent.com/UBC-MDS/music_explorer/main/data/spotify_songs.csv", 
+# index_col=0).rename(
+#     columns={'playlist_genre': 'genre',  
+#     'duration_ms': 'duration(ms)', 'track_popularity':'popularity'}, inplace=False).dropna()
+# df.to_pickle("./data.pickle")
+
+df = pd.read_pickle(r'./data/data.pickle')
 
 genre = sorted(list(df["genre"].dropna().unique()))
 features = ["danceability","energy","mode","speechiness","acousticness","liveness","valence","loudness"]
