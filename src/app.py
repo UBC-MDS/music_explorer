@@ -4,11 +4,17 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 
 alt.data_transformers.disable_max_rows()
+alt.data_transformers.enable('data_server')
+# alt.data_transformers.enable('data_server_proxied')
 
-df = pd.read_csv("https://raw.githubusercontent.com/UBC-MDS/music_explorer/main/data/spotify_songs.csv", 
-index_col=0).rename(
-    columns={'playlist_genre': 'genre',  
-    'duration_ms': 'duration(ms)', 'track_popularity':'popularity'}, inplace=False).dropna()
+# df = pd.read_csv("https://raw.githubusercontent.com/UBC-MDS/music_explorer/main/data/spotify_songs.csv", 
+# index_col=0).rename(
+#     columns={'playlist_genre': 'genre',  
+#     'duration_ms': 'duration(ms)', 'track_popularity':'popularity'}, inplace=False).dropna()
+# df["year"]= pd.to_datetime(df["track_album_release_date"].str[:4].astype(int), format="%Y")
+# df.to_pickle("./data/data.pickle")
+
+df = pd.read_pickle(r'./data/data.pickle')
 
 genre = sorted(list(df["genre"].dropna().unique()))
 features = ["danceability","energy","mode","speechiness","acousticness","liveness","valence","loudness"]
@@ -31,7 +37,8 @@ def plot_bar(genre,pop_range):
                 x="count()",
                 color=alt.Color("genre",legend=None),
                 tooltip='count()'
-            ).interactive()
+            )
+            # .interactive()
         )
         .properties(width=370, height=250)
         .configure_axis(labelFontSize=20, titleFontSize=20)
@@ -49,7 +56,7 @@ def plot_2(artist, genre, pop_range):
     if artist == None or artist == []:
         artist = filtered_df.groupby("track_artist")["track_artist"].size().nlargest(5).reset_index(name="count")["track_artist"].tolist()
     filtered_df = filtered_df.query("track_artist in @artist").copy()
-    filtered_df["year"]= filtered_df["track_album_release_date"].str[:4]
+    # filtered_df["year"]= filtered_df["track_album_release_date"].str[:4].astype(int)
 
     # Create plot 2 scatter
     chart = (
@@ -57,7 +64,7 @@ def plot_2(artist, genre, pop_range):
         .mark_point(size=20)
         .encode(
             y=alt.Y("popularity", title="Popularity", scale = alt.Scale(zero=False)),
-            x=alt.X("year", title="Year"),
+            x=alt.X("year", title="Year", scale = alt.Scale(zero=False)),
             
             color=alt.Color("track_artist", title = "Artist", legend=None, scale=alt.Scale(scheme='dark2')),
             tooltip=[alt.Tooltip("track_artist", title="Artist"), alt.Tooltip("track_name",title="Song title"), alt.Tooltip("genre",title="Genre")]
@@ -176,7 +183,7 @@ app.layout = dbc.Container([
             },),
 
             dbc.Button(
-            "Learn more",
+            "About",
             id="toast-toggle",
             color="#074983",
             n_clicks=0,
@@ -187,7 +194,7 @@ app.layout = dbc.Container([
                 "position" : "absolute",
                 "right":"20px",
                 'text-aligh':'center',
-                "width": 160, 
+                "width": 120, 
             }
             )
 
@@ -208,18 +215,36 @@ app.layout = dbc.Container([
             html.Br(),
             html.Br(),
             html.Br(),
-            html.P(
+            html.P([
                 "The music explorer dashboard is designed for the purpose of helping music lovers and members of Spotify music platform to explore the trends of songs and artists.",
-            style = {"font-size":20}),
+                html.Br(),
+                html.Br(),
+                "Start using the dashboard by limiting the songs' popularity range and selecting the music genre you are interested in.",
+            ],
+            style = {"font-size":20,
+                    'color': '#3F69A9',
+                    'font-family': 'sans-serif',
+                    "position": "absolute",
+                    "top": 40,
+                    "left": 0,
+                    "bottom": 0,
+                    "width":"18%",}),
+                        html.Br(),
 
         ],
     ),
      width=2,
     style={
-    "top": 0,
+        "position": "absolute",
+    "top": 80,
     "left": 0,
     "bottom": 0,
+    "width":"100%",
+    "height":920,
     "padding": "2rem 1rem",
+    "background-image": "url(/assets/background.jpg)",
+    "background-color": "#E4EBF5",
+    "background-blend-mode": "overlay",
     },
 ), 
         
@@ -232,12 +257,12 @@ app.layout = dbc.Container([
            dbc.Card([
                dbc.CardHeader(
                    html.Label("What kinds of music do you like to explore?",
-                   style={"font-size":16})),
+                   style={"font-size":18, 'text_aligh': 'left', 'color': '#3F69A9', 'font-family': 'sans-serif'})),
                dbc.CardBody([
                    dcc.Loading([
            html.Div(
                html.P("Popularity range"),
-                style={'text_aligh': 'left', 'color': '#0c5e45', 'font-family': 'sans-serif'}),
+                style={'text_aligh': 'left', 'color': '#3F69A9','font-family': 'sans-serif'}),
            html.Br(),
            dcc.RangeSlider(
                #className="slider_class",
@@ -246,12 +271,12 @@ app.layout = dbc.Container([
                 #step=1,
                 min=0,
                 max=100,
-                value=[20, 100],
+                value=[0, 100],
                 marks={0:{"label":"0"}, 25:{"label":"25"}, 50: {"label": "50"}, 75:{"label":"75"}, 100: {"label": "100"}}
                 ),
             html.Br(),
             html.Div(html.P("Select the music genre"),
-            style={'text_aligh': 'left', 'color': '#0c5e45', 'font-family': 'sans-serif'}),
+            style={'text_aligh': 'left', 'color': '#3F69A9', 'font-family': 'sans-serif'}),
             #html.Br(),
             dcc.Checklist(
                 id="genre_checklist",                    
@@ -259,9 +284,9 @@ app.layout = dbc.Container([
                 inputClassName="genre-input",
                 labelClassName="genre-label",
                 options=[{"label": i, "value": i} for i in genre],                        
-                value=["pop","rap","rock"],
+                value=["pop","rap","latin"],
                 labelStyle={"display":"block",
-                            "margin-left": "10px"}),
+                            "margin-left": "10px", 'color': '#3F69A9'}),
             ])
             ])
             ])
@@ -270,12 +295,12 @@ app.layout = dbc.Container([
         #plot graphs
        dbc.Col([
             dbc.Card([
-               dbc.CardHeader(html.Label("How many songs in the genres selected?",style={"font-size":16})),
+               dbc.CardHeader(html.Label("How many songs in the genres selected?",style={"font-size":18, 'text_aligh': 'left', 'color': '#3F69A9', 'font-family': 'sans-serif'})),
                html.Br(),
-               html.Iframe(
+               dcc.Loading(html.Iframe(
                    id = "plot_bar",
-                   srcDoc = plot_bar(genre=["pop","rap","rock"], pop_range=[50,100]),
-                   style={'border-width': '10', 'width': '500px', 'height': '337px'})      
+                #    srcDoc = plot_bar(genre=["pop","rap","latin"], pop_range=[50,100]),
+                   style={'border-width': '10', 'width': '100%', 'height': '337px'})      )
            ])
         ])
         ]),
@@ -284,27 +309,27 @@ app.layout = dbc.Container([
    dbc.Row([
        dbc.Col([
            dbc.Card([
-               dbc.CardHeader(html.Label("What are some artists' popularity trend, within the selected range and genres? "), style={'font-size':16}),
+               dbc.CardHeader(html.Label("What are some artists' popularity trend within the selected range? "), style={"font-size":18, 'text_aligh': 'left', 'color': '#3F69A9', 'font-family': 'sans-serif'}),
                dcc.Dropdown(id="artist_names", multi=True),
             #    dbc.Input(id='artist_name', type='text', list='list-suggested-inputs', value='', placeholder="Enter a specifc artist name"),
             #    html.Div(id="warning"),
             #    html.Datalist(id='list-suggested-inputs', children=[html.Option(value=name) for name in  suggested_list]),
 
-               html.Iframe(id="plot_2",
-               style={'border-width': '10', 'width': '200%', 'height': '350px'})
+               dcc.Loading(html.Iframe(id="plot_2",
+               style={'border-width': '10', 'width': '200%', 'height': '350px'}))
            ])
        ]),
 
        dbc.Col([
            dbc.Card([
-               dbc.CardHeader(html.Label("What's the relationship between songs' features and the popularity? "), style={'font-size':16}),
+               dbc.CardHeader(html.Label("What's the relationship between songs' features and the popularity? "), style={"font-size":18, 'text_aligh': 'left', 'color': '#3F69A9', 'font-family': 'sans-serif'}),
                dcc.Dropdown(id="features",
                value='danceability',
                options=[{'label': col, 'value': col} for col in features]),
             
 
-               html.Iframe(id="plot_3",
-               style={'border-width': '10', 'width': '100%', 'height': '350px'})
+               dcc.Loading(html.Iframe(id="plot_3",
+               style={'border-width': '10', 'width': '100%', 'height': '350px'}))
                
            ])
        ])
@@ -319,13 +344,15 @@ app.layout = dbc.Container([
         "position": "absolute",
         "left": "17%",
         "max-width": "83%",
-        "top": "80px",
+        "top": "90px",
+        
         }
     )
 ],
 style={
     "max-width": "100%",
-    "padding": "0"
+    "padding": "0",
+    
 })
 
 
