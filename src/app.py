@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 
 alt.data_transformers.disable_max_rows()
-alt.data_transformers.enable('data_server')
+# alt.data_transformers.enable('data_server')
 # alt.data_transformers.enable('data_server_proxied')
 
 # df = pd.read_csv("https://raw.githubusercontent.com/UBC-MDS/music_explorer/main/data/spotify_songs.csv", 
